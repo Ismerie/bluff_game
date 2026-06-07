@@ -2,17 +2,18 @@
 
 ## Branches
 
-| Préfixe | Quand l'utiliser |
-|---|---|
-| `feature/` | Nouvelle fonctionnalité |
-| `bugfix/` | Correction de bug |
+| Préfixe     | Quand l'utiliser                  |
+| ----------- | --------------------------------- |
+| `feature/`  | Nouvelle fonctionnalité           |
+| `bugfix/`   | Correction de bug                 |
 | `refactor/` | Refactoring sans ajout de feature |
-| `design/` | Game design, règles, équilibrage |
+| `design/`   | Game design, règles, équilibrage  |
 
 Format : `prefixe/[numero-issue]-[description-courte]`
 
 Exemples :
-- `feature/12-systeme-bluff`
+
+- `feature/14-systeme-bluff`
 - `bugfix/34-lobby-crash`
 
 ## Commits
@@ -20,6 +21,7 @@ Exemples :
 Format : `type: description courte`
 
 Exemples :
+
 - `feature: ajout du système de bluff`
 - `fix: correction crash lobby`
 - `refactor: nettoyage network manager`
