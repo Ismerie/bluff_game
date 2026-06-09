@@ -1,20 +1,70 @@
-# Godot 4.2+ specific ignores
-~*.dll
+# ============================================================
+# GODOT ENGINE
+# ============================================================
 
-# Godot 4+ specific ignores
+# Godot 4+ fichiers générés automatiquement
 .godot/
 .nomedia
 
-# Godot-specific ignores
-.import/
+# Godot 4.2+ DLL temporaires
+~*.dll
+
+# Fichiers d'import générés
+*.import
+
+# Config d'export (contient potentiellement des credentials)
 export.cfg
 export_credentials.cfg
+
+# Fichiers temporaires
 *.tmp
 
-# Imported translations (automatically generated from CSV files)
+# Traductions générées automatiquement depuis CSV
 *.translation
 
-# Mono-specific ignores
-.mono/
-data_*/
-mono_crash.*.json
+# ============================================================
+# ADDONS - FICHIERS DE CONFIG LOCALE
+# ============================================================
+
+# GUT (Godot Unit Testing)
+addons/gut/.gut_editor_shortcuts.cfg
+addons/gut/.gut_editor_params.cfg
+addons/gut/gut_temp_directory/
+
+# ============================================================
+# ÉDITEURS & IDEs
+# ============================================================
+
+# Visual Studio Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+
+# JetBrains (Rider, etc.)
+.idea/
+*.iml
+
+# ============================================================
+# OS
+# ============================================================
+
+# Windows
+Thumbs.db
+Desktop.ini
+
+# macOS
+.DS_Store
+._*
+
+# Linux
+*~
+
+# ============================================================
+# DIVERS
+# ============================================================
+
+# Logs
+*.log
+
+# Builds / exports du jeu (à adapter selon votre dossier)
+builds/
