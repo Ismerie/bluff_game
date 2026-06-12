@@ -1,0 +1,3 @@
+ignore_default_filters: false
+excluded_directories:
+    - addons
