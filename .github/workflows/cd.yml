@@ -1,0 +1,67 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+env:
+  GODOT_VERSION: "4.6"
+  PROJECT_PATH: "."
+  EXPORT_DIR: "exports"
+
+jobs:
+  export:
+    name: Export ${{ matrix.platform }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        include:
+          - platform: Windows
+            export-name: Windows Desktop
+            artifact-name: bluff_game-windows
+            output-file: bluff_game.exe
+          - platform: Linux
+            export-name: Linux/X11
+            artifact-name: bluff_game-linux
+            output-file: bluff_game.x86_64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Export ${{ matrix.platform }}
+        uses: abarichello/godot-ci@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          godot-version: ${{ env.GODOT_VERSION }}
+          export-name: ${{ matrix.export-name }}
+          project-path: ${{ env.PROJECT_PATH }}
+          relative-export-path: ${{ env.EXPORT_DIR }}
+          archive-output: true
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact-name }}
+          path: ${{ env.EXPORT_DIR }}
+
+  release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: export
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true
