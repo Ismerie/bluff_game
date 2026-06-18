@@ -121,6 +121,7 @@ bind/28/pose = Transform3D(0.9995077, -0.031371664, 2.8684735e-07, 0.031371556, 
 [sub_resource type="Animation" id="Animation_4fcuw"]
 resource_name = "Armature|idle_01"
 length = 1.9666667
+loop_mode = 1
 tracks/0/type = "position_3d"
 tracks/0/imported = true
 tracks/0/enabled = true
@@ -293,6 +294,7 @@ tracks/23/keys = PackedFloat32Array(0, 1, -0.039581433, 0.009809475, -0.01019148
 [sub_resource type="Animation" id="Animation_jkkdb"]
 resource_name = "Armature|walking"
 length = 1.0333333
+loop_mode = 1
 tracks/0/type = "position_3d"
 tracks/0/imported = true
 tracks/0/enabled = true
