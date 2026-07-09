@@ -1,0 +1,80 @@
+[gd_scene format=3 uid="uid://fy1elowjogv6"]
+
+[ext_resource type="PackedScene" uid="uid://sp1e5uu60b3q" path="res://assets/models/player/Player.tscn" id="1_b8bmd"]
+[ext_resource type="Script" uid="uid://baoqjidv6osu4" path="res://assets/scripts/player.gd" id="1_ttg3b"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_b8bmd"]
+margin = 0.05
+height = 4.0
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_ttg3b"]
+animation = &"Armature|idle_01"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_arjyu"]
+animation = &"Armature|walking"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_pl75a"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_c15qi"]
+advance_mode = 2
+advance_condition = &"is_walking"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_875am"]
+advance_mode = 2
+advance_condition = &"not is_walking"
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_70vt2"]
+states/Armature|idle_01/node = SubResource("AnimationNodeAnimation_ttg3b")
+states/Armature|idle_01/position = Vector2(412, 100)
+states/Armature|walking/node = SubResource("AnimationNodeAnimation_arjyu")
+states/Armature|walking/position = Vector2(665.902, 100)
+transitions = ["Start", "Armature|idle_01", SubResource("AnimationNodeStateMachineTransition_pl75a"), "Armature|idle_01", "Armature|walking", SubResource("AnimationNodeStateMachineTransition_c15qi"), "Armature|walking", "Armature|idle_01", SubResource("AnimationNodeStateMachineTransition_875am")]
+graph_offset = Vector2(-192.09799, 0)
+
+[node name="Player" type="CharacterBody3D" unique_id=814164481]
+axis_lock_angular_x = true
+axis_lock_angular_y = true
+axis_lock_angular_z = true
+script = ExtResource("1_ttg3b")
+
+[node name="Player" parent="." unique_id=2114588325 instance=ExtResource("1_b8bmd")]
+
+[node name="Armature" parent="Player" index="0" unique_id=1490231302]
+transform = Transform3D(-73.13209, -68.01787, 5.026464, -0.35902944, 7.7536473, 99.69828, -68.20238, 72.89342, -5.914609, -0.111183, -0.12857956, 0.11195489)
+
+[node name="Skeleton3D" parent="Player/Armature" index="0" unique_id=50429900]
+bones/0/rotation = Quaternion(-0.034431655, 0.7413147, 0.6699357, -0.021288184)
+bones/1/rotation = Quaternion(0.10069766, 0.08104592, -0.018447764, 0.991439)
+bones/2/rotation = Quaternion(0.10069768, 0.08104597, -0.018447764, 0.991439)
+bones/3/rotation = Quaternion(-0.03756013, -0.0110320095, 0.0021937112, 0.99923116)
+bones/6/rotation = Quaternion(-0.5436968, -0.40718865, -0.39888802, 0.6160191)
+bones/7/rotation = Quaternion(-0.62073046, -0.029276576, -0.19322465, 0.75927657)
+bones/8/rotation = Quaternion(0.012592999, 0.05838237, -0.40498903, 0.9123688)
+bones/9/rotation = Quaternion(0.16277514, 0.14005615, -0.015067377, 0.976556)
+bones/10/rotation = Quaternion(-0.03266139, -0.0057989154, -0.061123528, 0.99757886)
+bones/13/rotation = Quaternion(-0.51822084, 0.44199094, 0.45107403, 0.57673514)
+bones/14/rotation = Quaternion(-0.58800125, -0.008643149, -0.033437453, 0.8081224)
+bones/15/rotation = Quaternion(-0.044733237, 0.028515903, 0.35953757, 0.93162143)
+bones/16/rotation = Quaternion(-0.10669269, -0.06460317, 0.10118619, 0.987018)
+bones/17/rotation = Quaternion(-0.039582416, 0.009834543, -0.010170262, 0.99911624)
+bones/21/rotation = Quaternion(-0.4100162, -0.36495778, -0.23867781, 0.8010776)
+bones/22/rotation = Quaternion(-0.0077243727, 0.18825133, 0.30627492, 0.93311167)
+bones/23/rotation = Quaternion(0.35127008, 0.4975702, -0.37745672, 0.6975383)
+bones/24/rotation = Quaternion(0.32911143, 0.014831521, -0.049743168, 0.94286346)
+bones/28/rotation = Quaternion(-0.43254519, 0.4176438, 0.111227125, 0.7912692)
+bones/29/rotation = Quaternion(0.052230347, 0.007096774, -0.29896775, 0.95280635)
+bones/30/rotation = Quaternion(0.37579507, -0.4117236, 0.49444818, 0.66692036)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2017073504]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0.1)
+shape = SubResource("CapsuleShape3D_b8bmd")
+
+[node name="AnimationTree" type="AnimationTree" parent="." unique_id=1343305321]
+root_node = NodePath("../Player")
+tree_root = SubResource("AnimationNodeStateMachine_70vt2")
+anim_player = NodePath("../Player/AnimationPlayer")
+parameters/conditions/is_walking = false
+"parameters/conditions/not is_walking" = false
+
+[editable path="Player"]
