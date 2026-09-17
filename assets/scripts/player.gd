@@ -24,21 +24,11 @@ func handle_mouse_rotation(relative_x: float) -> void:
 func _physics_process(delta: float) -> void:
 	if not is_on_floor():
 		velocity += get_gravity() * delta
-	var direction = Vector3.ZERO
-	var is_walking = false
-	if Input.is_action_pressed("move_forward"):
-		direction += transform.basis.z
-		is_walking = true
-	if Input.is_action_pressed("move_back"):
-		direction -= transform.basis.z
-		is_walking = true
-	if Input.is_action_pressed("move_left"):
-		direction += transform.basis.x
-		is_walking = true
-	if Input.is_action_pressed("move_right"):
-		direction -= transform.basis.x
-		is_walking = true
-	direction = direction.normalized()
+
+	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
+	var direction = (transform.basis.x * -input_dir.x + transform.basis.z * -input_dir.y).normalized()
+	var is_walking = direction.length() > 0
+
 	velocity.x = direction.x * MOVEMENT_SPEED
 	velocity.z = direction.z * MOVEMENT_SPEED
 
