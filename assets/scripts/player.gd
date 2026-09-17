@@ -26,7 +26,9 @@ func _physics_process(delta: float) -> void:
 		velocity += get_gravity() * delta
 
 	var input_dir = Input.get_vector("move_left", "move_right", "move_forward", "move_back")
-	var direction = (transform.basis.x * -input_dir.x + transform.basis.z * -input_dir.y).normalized()
+	var direction = (
+		(transform.basis.x * -input_dir.x + transform.basis.z * -input_dir.y).normalized()
+	)
 	var is_walking = direction.length() > 0
 
 	velocity.x = direction.x * MOVEMENT_SPEED
