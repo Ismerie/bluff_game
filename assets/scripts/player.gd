@@ -1,9 +1,17 @@
 extends CharacterBody3D
 
 const MOVEMENT_SPEED: float = 5.0
-const ROTATION_SPEED: float = 0.005
+
+@export var mouse_sensibility: float
+@export var camera: Camera3D
+
+var camera_rotation_x: float
 
 @onready var anim_tree = $AnimationTree
+
+
+func _init() -> void:
+	camera_rotation_x = 0.0
 
 
 func _ready() -> void:
@@ -14,11 +22,14 @@ func _input(event: InputEvent) -> void:
 	if event.is_action_pressed("ui_cancel"):
 		Input.mouse_mode = Input.MOUSE_MODE_VISIBLE
 	if event is InputEventMouseMotion:
-		handle_mouse_rotation(event.relative.x)
+		handle_mouse_rotation(event.relative)
 
 
-func handle_mouse_rotation(relative_x: float) -> void:
-	rotate_y(-relative_x * ROTATION_SPEED)
+func handle_mouse_rotation(relative: Vector2) -> void:
+	rotate_y(-relative.x * mouse_sensibility)
+	camera_rotation_x -= relative.y * mouse_sensibility
+	camera_rotation_x = clamp(camera_rotation_x, deg_to_rad(-90), deg_to_rad(90))
+	camera.rotation.x = camera_rotation_x
 
 
 func _physics_process(delta: float) -> void:
