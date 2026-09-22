@@ -43,30 +43,33 @@ camera = NodePath("Camera3D")
 [node name="Player" parent="." unique_id=2114588325 instance=ExtResource("1_b8bmd")]
 
 [node name="Armature" parent="Player" index="0" unique_id=1490231302]
-transform = Transform3D(-73.13218, -67.99357, 5.343993, -0.327893, 8.185816, 99.663826, -68.202446, 72.86885, -6.2094097, -0.12019584, -0.12204969, 0.13285501)
+transform = Transform3D(-73.13221, -67.9887, 5.405157, -0.33376536, 8.281746, 99.65588, -68.202385, 72.86256, -6.2835445, -0.11725312, -0.12357825, 0.12625149)
 
 [node name="Skeleton3D" parent="Player/Armature" index="0" unique_id=50429900]
-bones/0/rotation = Quaternion(-0.034325503, 0.74046856, 0.67087775, -0.021238148)
-bones/1/rotation = Quaternion(0.09659188, 0.08061986, -0.017378649, 0.9919015)
-bones/2/rotation = Quaternion(0.0965318, 0.08061817, -0.017401157, 0.991907)
-bones/3/rotation = Quaternion(-0.025179716, -0.010423174, 0.0019465009, 0.9996268)
-bones/6/rotation = Quaternion(-0.54081804, -0.40848288, -0.38572302, 0.62599957)
-bones/7/rotation = Quaternion(-0.62813026, -0.02048391, -0.19444716, 0.7531422)
-bones/8/rotation = Quaternion(0.007826393, 0.06332246, -0.41510126, 0.9075352)
-bones/9/rotation = Quaternion(0.117615744, 0.13654193, -0.012490404, 0.9835481)
-bones/10/rotation = Quaternion(-0.055553067, -0.00509714, -0.06344805, 0.9964248)
-bones/13/rotation = Quaternion(-0.5155844, 0.44495714, 0.435546, 0.5886303)
-bones/14/rotation = Quaternion(-0.6019624, -0.02711211, -0.03185465, 0.79742813)
-bones/15/rotation = Quaternion(-0.056739114, 0.007375561, 0.36339754, 0.9298756)
-bones/16/rotation = Quaternion(-0.11495394, -0.054309193, 0.09866812, 0.9869655)
-bones/17/rotation = Quaternion(-0.041079216, 0.010278487, -0.008046432, 0.99907064)
-bones/21/rotation = Quaternion(-0.4140421, -0.3622126, -0.23316516, 0.80187607)
-bones/22/rotation = Quaternion(-0.0070950706, 0.18931995, 0.30299047, 0.93397236)
-bones/23/rotation = Quaternion(0.35299638, 0.4976491, -0.376197, 0.697291)
-bones/24/rotation = Quaternion(0.3291096, 0.015085166, -0.049892064, 0.9428522)
-bones/28/rotation = Quaternion(-0.43542856, 0.41233173, 0.10029113, 0.7939308)
-bones/29/rotation = Quaternion(0.05261244, 0.008406084, -0.28398275, 0.95734805)
-bones/30/rotation = Quaternion(0.370652, -0.41388932, 0.4919858, 0.6702706)
+bones/0/rotation = Quaternion(-0.034163255, 0.7400896, 0.6713088, -0.021087203)
+bones/1/rotation = Quaternion(0.09729158, 0.08032812, -0.017541759, 0.99185395)
+bones/2/rotation = Quaternion(0.09729152, 0.08032823, -0.017541753, 0.99185395)
+bones/3/rotation = Quaternion(-0.022268914, -0.010900401, 0.0018664598, 0.9996909)
+bones/6/rotation = Quaternion(-0.53997785, -0.40949103, -0.3851467, 0.6264209)
+bones/7/rotation = Quaternion(-0.6264187, -0.023430737, -0.19320911, 0.75479865)
+bones/8/rotation = Quaternion(0.009644303, 0.0612526, -0.4108406, 0.9095962)
+bones/9/rotation = Quaternion(0.13905942, 0.13812801, -0.013364298, 0.9805124)
+bones/10/rotation = Quaternion(-0.037972152, -0.005799015, -0.0614092, 0.99737334)
+bones/13/rotation = Quaternion(-0.5155374, 0.44494244, 0.4361751, 0.5882166)
+bones/14/rotation = Quaternion(-0.59696263, -0.02122114, -0.033124626, 0.8013041)
+bones/15/rotation = Quaternion(-0.055656876, 0.012255946, 0.36327136, 0.92993873)
+bones/16/rotation = Quaternion(-0.09855553, -0.054948784, 0.094458394, 0.98911333)
+bones/17/rotation = Quaternion(-0.0370884, 0.009571404, -0.010312174, 0.999213)
+bones/21/rotation = Quaternion(-0.41310897, -0.36265123, -0.23460451, 0.8017393)
+bones/22/rotation = Quaternion(-0.006974656, 0.18925372, 0.3028643, 0.9340276)
+bones/23/rotation = Quaternion(0.35196948, 0.49846858, -0.37614977, 0.69725025)
+bones/24/rotation = Quaternion(0.32910797, 0.016041672, -0.0496801, 0.9428482)
+bones/28/rotation = Quaternion(-0.4345669, 0.4141091, 0.10407279, 0.7929907)
+bones/29/rotation = Quaternion(0.05261276, 0.00811203, -0.2890155, 0.95584315)
+bones/30/rotation = Quaternion(0.37239873, -0.4131166, 0.49285245, 0.6691415)
+
+[node name="character" parent="Player/Armature/Skeleton3D" index="0" unique_id=319025697]
+cast_shadow = 3
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=2017073504]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0.1)
@@ -80,7 +83,7 @@ parameters/conditions/is_not_walking = false
 parameters/conditions/is_walking = false
 
 [node name="Camera3D" type="Camera3D" parent="." unique_id=1550295617]
-transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 3.5, 0.6)
+transform = Transform3D(-1, 0, -8.742278e-08, 0, 1, 0, 8.742278e-08, 0, -1, 0, 3.5, 0.1)
 fov = 90.0
 near = 0.03
 far = 100.0
