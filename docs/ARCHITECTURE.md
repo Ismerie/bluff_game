@@ -6,7 +6,7 @@
 
 ---
 
-## 1. Les 5 principes à retenir
+## 1. Les 6 principes à retenir
 
 1. **Le multijoueur n'est pas une feature, c'est la fondation.**
    Tout système qui touche à l'état de la partie (phase, timer, scores, rôles, secrets, résultats d'un mini-jeu) est écrit *dès le départ* en mode « le serveur décide, les clients affichent ». Ajouter le réseau à la fin = tout réécrire.
@@ -14,8 +14,9 @@
    Un client ne fait que *demander* (`request_...`). Le serveur valide, applique, puis *annonce* le résultat.
 3. **Un client ne reçoit jamais une info qu'il n'a pas le droit de connaître.**
    C'est un jeu de bluff : si un rôle secret est envoyé à tout le monde « mais caché dans l'UI », n'importe qui peut tricher. Les secrets partent en `rpc_id(peer_id, ...)` uniquement.
-4. **Un mini-jeu = un dossier autonome** qui respecte un contrat commun (§6). Ajouter un mini-jeu ne doit pas demander de toucher au reste du jeu.
-5. **Une feature = un dossier.** La scène, son script, ses ressources et ses tests sont rangés ensemble.
+4. **Le cœur du jeu, c'est la salle globale et la parole.** C'est là que se jouent la stratégie, les alliances et les trahisons. La voix de proximité (parler, murmurer, crier) est un système central, traité dès le début, pas un bonus de fin de projet (§8).
+5. **Un mini-jeu = un dossier autonome** qui respecte un contrat commun (§6). Ajouter un mini-jeu ne doit pas demander de toucher au reste du jeu.
+6. **Une feature = un dossier.** La scène, son script, ses ressources et ses tests sont rangés ensemble.
 
 ---
 
@@ -35,6 +36,7 @@ res://
 │   │   ├── players.gd
 │   │   ├── match.gd
 │   │   ├── events.gd
+│   │   ├── voice.gd         # capture micro, encodage, relais par le serveur (§8)
 │   │   └── settings.gd
 │   ├── main/                # scène racine persistante (§3)
 │   │   ├── main.tscn
@@ -43,11 +45,12 @@ res://
 │   │   ├── player.tscn
 │   │   ├── player.gd
 │   │   └── player_camera.gd
+│   ├── voice/               # VoiceEmitter (sur le Player), zones acoustiques, indicateur « parle »
 │   ├── interaction/         # composant « appuyer sur E » réutilisable
 │   │   ├── interactable.gd
 │   │   └── interactor.gd
 │   ├── rooms/
-│   │   ├── global_room/     # salle globale (hub social)
+│   │   ├── global_room/     # salle globale : le cœur du jeu (alliances, échanges, bonus)
 │   │   └── results_room/    # écran / salle de fin de partie
 │   ├── minigames/
 │   │   ├── _framework/      # contrat commun : minigame.gd, minigame_definition.gd, minigame_result.gd, registry
@@ -116,6 +119,7 @@ Peu d'autoloads, chacun avec une seule responsabilité. Règle : **un autoload n
 | `Net` | Héberger / rejoindre / quitter, gère le `MultiplayerPeer` (ENet au début, Steam plus tard — §7), signaux `connected`, `connection_failed`, `server_closed`. Cache le type de transport au reste du jeu. | tous |
 | `Players` | Registre des joueurs : `{peer_id: PlayerInfo}` (pseudo, couleur, prêt, score, connecté). Le serveur le modifie, puis le diffuse. Signaux `player_joined`, `player_left`, `player_updated`. | serveur = écrit, clients = lisent |
 | `Match` | **Le meneur de jeu** : machine à états de la partie (§5), timers, enchaînement des épreuves, calcul des points. Toute la logique ne s'exécute que si `multiplayer.is_server()`. Les clients reçoivent `phase_changed(phase, data)`. | serveur = décide |
+| `Voice` | Capture du micro, encodage, envoi au serveur ; réception et lecture des voix des autres. Le serveur décide **qui entend qui** (§8). | tous |
 | `Events` | Bus de signaux **locaux** pour découpler l'UI du gameplay (`interaction_prompt_changed`, `toast_requested`…). Pas de réseau ici. | tous |
 | `Settings` | Sensibilité souris, volumes, pseudo, dernière IP — sauvegardé dans `user://settings.cfg`. | tous |
 
@@ -200,6 +204,7 @@ class_name MinigameDefinition extends Resource
 @export var max_players := 10
 @export var max_duration_sec := 20 * 60
 @export var base_points := 10
+@export_enum("proximite", "tout_le_monde", "muet", "equipe") var voice_rule := "proximite"
 ```
 
 Un `MinigameRegistry` charge au démarrage tous les `res://src/minigames/*/definition.tres`. Ajouter un mini-jeu = créer un dossier, aucune autre modification.
@@ -293,7 +298,35 @@ func _announce_ready(peer_id: int, is_ready: bool) -> void:
 
 ---
 
-## 8. Tests et workflow
+## 8. Voix de proximité (parler, murmurer, crier)
+
+C'est le système le plus risqué techniquement : on le prototype tôt (milestone dédiée) pour savoir vite si la solution choisie tient à 10 joueurs.
+
+**Chaîne côté client qui parle :**
+`AudioStreamMicrophone` sur un bus avec `AudioEffectCapture` → découpage en paquets de 20 ms → **compression Opus** (Godot ne la fournit pas : addon GDExtension type *twovoip*, ou la voix intégrée de Steam si on passe par GodotSteam) → `rpc_id(1, ...)` en mode `unreliable_ordered` vers le serveur, avec le mode de voix courant.
+
+**Côté serveur : il relaie, et il filtre.**
+Le serveur connaît la position de chaque joueur et sa zone. Pour chaque paquet, il ne le renvoie qu'aux joueurs qui ont le droit d'entendre :
+
+| Mode | Portée indicative | Touche (proposition) |
+| --- | --- | --- |
+| Murmure | ~2 m | maintenir Alt + parler |
+| Normal | ~12 m | push-to-talk ou détection de voix |
+| Cri | ~40 m, traverse les portes | maintenir Maj + parler |
+
+Ce filtrage côté serveur applique le principe 3 : un joueur qui modifie son client ne peut **pas** écouter une conversation privée, puisque les paquets ne lui sont jamais envoyés. Faire seulement baisser le volume côté client serait trichable.
+
+**Côté client qui écoute :** chaque Player porte un `VoiceEmitter` (`AudioStreamPlayer3D` + `AudioStreamGenerator`) : la voix est spatialisée et s'atténue avec la distance. Le mode règle la portée (`max_distance`, `unit_size`), un indicateur montre qui parle.
+
+**Zones acoustiques :** des `Area3D` « pièce isolée » dans la salle globale. Deux joueurs dans une pièce fermée ne sont entendus que de l'intérieur (sauf cri). C'est la base des alliances en cachette.
+
+**Pendant les mini-jeux :** chaque mini-jeu peut imposer sa règle de voix (tout le monde s'entend, muet, par équipe) via une propriété de sa `MinigameDefinition`.
+
+**Débit :** Opus ~16–24 kbit/s par voix ; le serveur (l'hôte) renvoie au pire 9 voix à 9 joueurs. C'est à mesurer pendant le prototype : c'est la connexion montante de l'hôte qui limite.
+
+---
+
+## 9. Tests et workflow
 
 - **Tests GUT** dans `test/`, fichiers `test_*.gd`. Tester en priorité la logique pure, sans réseau : calcul des points, transitions de la machine à états, règles d'un mini-jeu (`MinigameResult` attendu pour une suite d'actions donnée). Pour ça, garder la logique des règles dans des fonctions qui ne dépendent pas de `multiplayer`.
 - **Tester à plusieurs en local :** *Débogage › Personnaliser les instances de lancement* → 3 instances, la 1ʳᵉ avec l'argument `--host`, les autres avec `--join=127.0.0.1`. `Net` lit `OS.get_cmdline_user_args()` et se connecte tout seul.
@@ -301,12 +334,11 @@ func _announce_ready(peer_id: int, is_ready: bool) -> void:
 
 ---
 
-## 9. Décisions encore ouvertes (impact technique)
+## 10. Décisions encore ouvertes (impact technique)
 
 | Question | Impact |
 | --- | --- |
-| Chat vocal **dans le jeu** (proximité, salles isolées) ou Discord à côté ? | Énorme : le vocal de proximité conditionne tout le design de la salle globale et pousse vers Steam. |
-| Steam ou pas (sortie Steam, relais, invitations) ? | Choix du transport réseau final. |
+| Steam ou pas (sortie Steam, relais, invitations, voix) ? | Choix du transport réseau final **et** de la brique voix (Steam Voice ou addon Opus). |
 | Bluff / vote / élimination : mécaniques **globales** ou propres à certains mini-jeux ? | Si globales, il faut un système commun (vote, élimination, spectateur) dans `Match`. |
 | Que fait un joueur éliminé / déconnecté ? | Mode spectateur, reconnexion, gestion des points. |
 | Monnaie / objets / bonus de la salle globale | Inventaire, économie, échanges serveur. |
