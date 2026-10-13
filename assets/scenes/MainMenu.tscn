@@ -1,0 +1,98 @@
+[gd_scene format=3 uid="uid://dsgqj1bk3bfmc"]
+
+[ext_resource type="Script" uid="uid://cqygoepu5q6fn" path="res://assets/scripts/main_menu.gd" id="1_5gpod"]
+[ext_resource type="Theme" uid="uid://dv5nylr62wadb" path="res://assets/themes/theme_button.tres" id="1_t6dbj"]
+[ext_resource type="Texture2D" uid="uid://bq6qhtuj1o4kf" path="res://assets/image/background_eyes.jpg" id="1_u804d"]
+
+[node name="MainMenu" type="CanvasLayer" unique_id=863897542]
+
+[node name="Control" type="Control" parent="." unique_id=498908065]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="Background" type="TextureRect" parent="Control" unique_id=1294188777]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("1_u804d")
+
+[node name="Title" type="Label" parent="Control" unique_id=442637001]
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -172.0
+offset_top = 189.0
+offset_right = 173.0
+offset_bottom = 277.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 100
+text = "Bluff Game"
+
+[node name="CenterContainer" type="CenterContainer" parent="Control" unique_id=1249232915]
+propagate_maximum_size = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -200.0
+offset_top = -594.0
+offset_right = 200.0
+offset_bottom = -214.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="Control/CenterContainer" unique_id=780907624]
+custom_minimum_size = Vector2(400, 0)
+propagate_maximum_size = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 40
+
+[node name="CreateButton" type="Button" parent="Control/CenterContainer/VBoxContainer" unique_id=1885709167]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_t6dbj")
+text = "Créer une partie"
+
+[node name="JoinButton" type="Button" parent="Control/CenterContainer/VBoxContainer" unique_id=2036820234]
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_t6dbj")
+text = "Rejoindre une partie"
+
+[node name="SettingsButton" type="Button" parent="Control/CenterContainer/VBoxContainer" unique_id=1439009410]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_t6dbj")
+text = "Paramètres"
+
+[node name="QuitButton" type="Button" parent="Control/CenterContainer/VBoxContainer" unique_id=1232093503]
+custom_minimum_size = Vector2(0, 50)
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("1_t6dbj")
+text = "Quitter"
+
+[node name="MenuScript" type="Node" parent="." unique_id=605687790]
+script = ExtResource("1_5gpod")
