@@ -3,11 +3,18 @@
 [ext_resource type="PackedScene" uid="uid://fy1elowjogv6" path="res://assets/prefab/Player.tscn" id="1_g3k4f"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0aiux"]
-size = Vector3(10, 0.1, 10)
+size = Vector3(30, 0.1, 30)
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_0aiux"]
 margin = 0.05
-size = Vector3(10, 0.1, 10)
+size = Vector3(30, 0.1, 30)
+
+[sub_resource type="BoxMesh" id="BoxMesh_g3k4f"]
+size = Vector3(3, 6, 10)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_npkpr"]
+margin = 0.05
+size = Vector3(3, 6, 10)
 
 [node name="Node3D" type="Node3D" unique_id=2066783549]
 
@@ -24,3 +31,21 @@ mesh = SubResource("BoxMesh_0aiux")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D" unique_id=2022490239]
 shape = SubResource("BoxShape3D_0aiux")
+
+[node name="StaticBody3D2" type="StaticBody3D" parent="." unique_id=83082000]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 7.5, 3, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D2" unique_id=1785098696]
+mesh = SubResource("BoxMesh_g3k4f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D2" unique_id=1863481328]
+shape = SubResource("BoxShape3D_npkpr")
+
+[node name="StaticBody3D3" type="StaticBody3D" parent="." unique_id=1590790111]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -7.5, 3, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StaticBody3D3" unique_id=526023091]
+mesh = SubResource("BoxMesh_g3k4f")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StaticBody3D3" unique_id=1321756576]
+shape = SubResource("BoxShape3D_npkpr")

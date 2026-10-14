@@ -27,17 +27,49 @@ func test_player_velocity_is_zero_by_default():
 # --- Rotation ---
 
 
-func test_player_rotates_on_mouse_motion():
+func test_player_rotates_horizontally_on_mouse_motion():
 	var initial_rotation = player.rotation.y
-	var mouse_motion_event = InputEventMouseMotion.new()
-	mouse_motion_event.relative = Vector2(1, 1)
-	player.handle_mouse_rotation(mouse_motion_event.relative.x)
+	player.handle_mouse_rotation(Vector2(1, 0))
 	await wait_physics_frames(1)
 
 	assert_ne(
 		player.rotation.y,
 		initial_rotation,
 		"Le joueur doit tourner sur l'axe Y en fonction du mouvement de la souris"
+	)
+
+
+func test_camera_rotates_vertically_on_mouse_motion():
+	var initial_rotation = player.camera.rotation.x
+	player.handle_mouse_rotation(Vector2(0, 1))
+	await wait_physics_frames(1)
+
+	assert_ne(
+		player.camera.rotation.x,
+		initial_rotation,
+		"La caméra doit tourner sur l'axe X en fonction du mouvement de la souris"
+	)
+
+
+func test_camera_vertical_rotation_is_clamped():
+	player.handle_mouse_rotation(Vector2(0, 1000))
+	await wait_physics_frames(1)
+
+	assert_almost_eq(
+		player.camera.rotation.x,
+		deg_to_rad(-90),
+		0.1,
+		"La rotation verticale de la caméra doit être limitée à 90 degrés"
+	)
+
+	player.handle_mouse_rotation(Vector2(0, -2000))
+	await wait_physics_frames(1)
+
+	assert_almost_eq(
+		player.camera.rotation.x,
+		deg_to_rad(90),
+		0.1,
+		"La rotation verticale de la caméra doit être limitée à -90 degrés"
 	)
 
 
