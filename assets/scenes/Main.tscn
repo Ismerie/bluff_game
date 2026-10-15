@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://bkmq6w724hqu4"]
 
 [ext_resource type="PackedScene" uid="uid://fy1elowjogv6" path="res://assets/prefab/Player.tscn" id="1_g3k4f"]
+[ext_resource type="Script" path="res://assets/scripts/game.gd" id="2_6yq1m"]
 
 [sub_resource type="BoxMesh" id="BoxMesh_0aiux"]
 size = Vector3(10, 0.1, 10)
@@ -10,6 +11,7 @@ margin = 0.05
 size = Vector3(10, 0.1, 10)
 
 [node name="Node3D" type="Node3D" unique_id=2066783549]
+script = ExtResource("2_6yq1m")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="." unique_id=636078243]
 transform = Transform3D(1, 0, 0, 0, -4.371139e-08, 1, 0, -1, -4.371139e-08, 0, 9, 0)
